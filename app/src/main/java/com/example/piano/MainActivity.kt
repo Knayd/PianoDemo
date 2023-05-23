@@ -23,6 +23,12 @@ import com.citizenwarwick.pianoroll.PianoRollOptions
 import com.example.piano.ui.theme.PianoTheme
 import com.example.piano.ui.theme.PianoViewModel
 
+/**
+ * Resources:
+ * https://www.reddit.com/r/piano/comments/3u6ke7/heres_some_midi_and_mp3_files_for_individual/
+ * https://github.com/fluxtah/pianoroll
+ */
+
 class MainActivity : ComponentActivity() {
 
     private val viewModel = PianoViewModel()
