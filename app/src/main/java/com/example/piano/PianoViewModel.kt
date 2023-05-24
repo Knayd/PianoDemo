@@ -1,10 +1,7 @@
-package com.example.piano.ui.theme
+package com.example.piano
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.citizenwarwick.music.Note
-import com.citizenwarwick.music.PitchClass
-import com.example.piano.R
 import kotlinx.coroutines.flow.MutableStateFlow
 
 

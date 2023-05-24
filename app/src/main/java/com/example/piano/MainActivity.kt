@@ -15,13 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.citizenwarwick.music.Note
-import com.citizenwarwick.music.PitchClass
-import com.citizenwarwick.music.chord
-import com.citizenwarwick.pianoroll.PianoRoll
-import com.citizenwarwick.pianoroll.PianoRollOptions
 import com.example.piano.ui.theme.PianoTheme
-import com.example.piano.ui.theme.PianoViewModel
 
 /**
  * Resources:
@@ -49,7 +43,7 @@ class MainActivity : ComponentActivity() {
                         endNote = Note(PitchClass.C, 6),
                         options = PianoRollOptions(
                             highlightedNotes = highlightedNote?.chord ?: setOf(),
-                            highlightKeyColor = Color.Green
+                            highlightKeyColor = Color.Green,
                         ),
                         onKeyPressed = { viewModel.onKeyPressed(it, context) }
                     )
