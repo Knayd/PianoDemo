@@ -34,7 +34,11 @@ import com.example.piano.ui.theme.PianoTheme
 @Composable
 fun WhiteKey(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    note: Note,
+    highlighted: Boolean = false,
+    showNoteName: Boolean = true,
+    textColor: Color = Color.Black,
+    onClick: (Note) -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -47,13 +51,19 @@ fun WhiteKey(
         Color(0xFFFAFAFA)
     )
 
-    val backgroundGradient = if (isPressed) listOf(
-        Color(0xFFC2C2C2),
-        Color(0xFFD9D9D9),
-    ) else listOf(
-        Color(0xFFE4E4E4),
-        Color(0xFFFFFFFF),
-    )
+    val backgroundGradient = when {
+        isPressed -> listOf(
+            Color(0xFFC2C2C2),
+            Color(0xFFD9D9D9),
+        )
+
+        highlighted -> listOf(Color.White, Color.Green)
+
+        else -> listOf(
+            Color(0xFFE4E4E4),
+            Color(0xFFFFFFFF),
+        )
+    }
 
     val embossGradient = if (isPressed) listOf(
         Color(0xFFB9B9B9),
@@ -66,7 +76,7 @@ fun WhiteKey(
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .clickable(interactionSource = interactionSource, indication = null) { }
+            .clickable(interactionSource = interactionSource, indication = null) { onClick(note) }
             .width(48.dp)
     )
     {
@@ -83,14 +93,17 @@ fun WhiteKey(
                     shape = RoundedCornerShape(3.dp)
                 )
         ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp),
-                text = "A0",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Black
-            )
+            if (showNoteName) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp),
+                    text = "${note.pitch.noteName}${note.octave}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Black,
+                    color = textColor
+                )
+            }
         }
         Box(
             modifier = Modifier
@@ -107,6 +120,6 @@ fun WhiteKey(
 @Composable
 private fun WhiteKeyPreview() {
     PianoTheme {
-        WhiteKey()
+        WhiteKey(note = Note(PitchClass.C, 3))
     }
 }

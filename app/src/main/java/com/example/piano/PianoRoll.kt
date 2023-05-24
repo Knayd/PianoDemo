@@ -1,19 +1,15 @@
 package com.example.piano
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import kotlin.math.roundToInt
 
@@ -22,7 +18,6 @@ import kotlin.math.roundToInt
 fun PianoRollPreview() {
     val startNote = Note(PitchClass.C, 0)
     val endNote = Note(PitchClass.E, 1)
-
     PianoRoll(startNote, endNote)
 }
 
@@ -67,23 +62,35 @@ fun PianoRoll(
             var bias = 0f;
             if (note.pitch == PitchClass.Cs || note.pitch == PitchClass.Fs) bias = -(options.blackKeyWidthScaled / 4)
             if (note.pitch == PitchClass.Ds || note.pitch == PitchClass.As) bias = (options.blackKeyWidthScaled / 4)
-            Box(
-                Modifier
-                    .width(if (isBlackNote) options.blackKeyWidthScaled.dp else options.keyWidthScaled.dp)
-                    .height(if (isBlackNote) options.blackKeyHeightScaled.dp else options.keyHeightScaled.dp)
-                    .zIndex(if (isBlackNote) 2f else 1f)
-                    .offset(
-                        x = (bias + xPos + if (isBlackNote) (options.blackKeyWidthScaled).roundToInt() else 0).dp,
-                        y = options.topBorderSizeScaled.dp
-                    )
-                    .background(computeKeyColor(options, isBlackNote, highlighted))
-                    .clickable { onKeyPressed(note) },
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Text(
-                    fontSize = options.fontSizeScaled.sp,
-                    color = if (isBlackNote) options.blackKeyTextColor else options.whiteKeyTextColor,
-                    text = "${note.pitch.noteName}${note.octave}"
+            if (isBlackNote) {
+                BlackKey(
+                    modifier = Modifier
+                        .width(options.blackKeyWidthScaled.dp)
+                        .height(options.blackKeyHeightScaled.dp)
+                        .zIndex(2f)
+                        .offset(
+                            x = (bias + xPos + (options.blackKeyWidthScaled).roundToInt()).dp,
+                            y = options.topBorderSizeScaled.dp
+                        ),
+                    note = note,
+                    highlighted = highlighted,
+                    onClick = onKeyPressed
+                )
+            } else {
+                WhiteKey(
+                    modifier = Modifier
+                        .width(options.keyWidthScaled.dp)
+                        .height(options.keyHeightScaled.dp)
+                        .zIndex(1f)
+                        .offset(
+                            x = (bias + xPos).dp,
+                            y = options.topBorderSizeScaled.dp
+                        ),
+                    note = note,
+                    highlighted = highlighted,
+                    onClick = onKeyPressed,
+                    showNoteName = options.showNoteNames,
+                    textColor = options.whiteKeyTextColor
                 )
             }
         }

@@ -3,14 +3,17 @@ package com.example.piano
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,11 +35,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val highlightedNote by viewModel.highlightedNoteFlow.collectAsState()
+            var showNoteNames by remember { mutableStateOf(true) }
             PianoTheme {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .horizontalScroll(rememberScrollState())
+                        .background(Color(0xFF878A8C))
                 ) {
                     PianoRoll(
                         startNote = Note(PitchClass.C, 3),
@@ -44,9 +48,15 @@ class MainActivity : ComponentActivity() {
                         options = PianoRollOptions(
                             highlightedNotes = highlightedNote?.chord ?: setOf(),
                             highlightKeyColor = Color.Green,
+                            borderColor = Color.Transparent,
+                            topBorderSize = 0f,
+                            showNoteNames = showNoteNames
                         ),
                         onKeyPressed = { viewModel.onKeyPressed(it, context) }
                     )
+                    Button(onClick = { showNoteNames = !showNoteNames }) {
+                        Text(text = "Show names")
+                    }
                 }
             }
         }

@@ -28,20 +28,28 @@ import com.example.piano.ui.theme.PianoTheme
 @Composable
 fun BlackKey(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    note: Note,
+    highlighted: Boolean = false,
+    onClick: (Note) -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val borderColor = Color(if (isPressed) 0xFF313436 else 0xFF3A3D40)
 
-    val backgroundGradient = if (isPressed) listOf(
-        Color(0xFF747577),
-        Color(0xFF313436),
-    ) else listOf(
-        Color(0xFF878A8C),
-        Color(0xFF3A3D40),
-    )
+    val backgroundGradient = when {
+        isPressed -> listOf(
+            Color(0xFF747577),
+            Color(0xFF313436),
+        )
+
+        highlighted -> listOf(Color.White, Color.Green)
+
+        else -> listOf(
+            Color(0xFF878A8C),
+            Color(0xFF3A3D40),
+        )
+    }
 
     val embossGradient = if (isPressed) listOf(
         Color(0xFF0C0D0E),
@@ -56,7 +64,7 @@ fun BlackKey(
             .fillMaxHeight()
             .offset(y = (-2).dp)
             .border(1.dp, borderColor, RoundedCornerShape(bottomStart = 3.dp, bottomEnd = 3.dp))
-            .clickable(interactionSource = interactionSource, indication = null) { }
+            .clickable(interactionSource = interactionSource, indication = null) { onClick(note) }
             .width(46.dp)
     )
     {
@@ -82,6 +90,6 @@ fun BlackKey(
 @Composable
 private fun BlackKeyPreview() {
     PianoTheme {
-        BlackKey()
+        BlackKey(note = Note(PitchClass.C, 3))
     }
 }
